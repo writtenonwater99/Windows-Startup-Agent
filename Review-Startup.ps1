@@ -31,6 +31,7 @@ if ($AutorunsCsv) {
 }
 function Get-Identity($entry) { ConvertTo-Json -Compress -InputObject @($entry.Location,$entry.User,$entry.Name) }
 $changes = @()
+$baselineWarnings = @()
 if ($Baseline) {
     $old = Get-Content -Raw -LiteralPath $Baseline | ConvertFrom-Json
     if ($old.Format -ne 'startup-1' -or $old.Mode -ne $mode -or $old.Entries -isnot [array]) { throw 'Use a baseline from the same collection mode.' }
@@ -50,6 +51,6 @@ if ($Baseline) {
     foreach ($id in $previous.Keys) {
         if (!$current.ContainsKey($id)) { [pscustomobject]@{State='No longer observed'; Before=$previous[$id]; After=$null} }
     })
-    $warnings += @($old.Warnings | Where-Object { $_ } | ForEach-Object { "Baseline: $_" })
+    $baselineWarnings = @($old.Warnings | Where-Object { $_ })
 }
-[pscustomobject]@{Format='startup-1'; Mode=$mode; CapturedUtc=[datetime]::UtcNow.ToString('o'); Entries=$entries; Changes=$changes; Warnings=$warnings} | ConvertTo-Json -Depth 6
+[pscustomobject]@{Format='startup-1'; Mode=$mode; CapturedUtc=[datetime]::UtcNow.ToString('o'); Entries=$entries; Changes=$changes; Warnings=$warnings; BaselineWarnings=$baselineWarnings} | ConvertTo-Json -Depth 6

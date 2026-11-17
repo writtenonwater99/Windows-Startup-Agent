@@ -2,6 +2,8 @@
 
 Compare Windows startup snapshots and explain newly observed, changed or missing sign-in entries. Works from native Run and RunOnce keys or a Sysinternals Autorunsc CSV.
 
+Feel free to test locally by comparing a saved Autorunsc CSV with a baseline made from the same CSV. Expect an empty `Changes` array.
+
 ## For AI agents
 
 Start with [AGENTS.md](AGENTS.md). Run the scripts as the signed-in user in Windows PowerShell 5.1. Keep reports local unless the owner chooses to share them.
@@ -9,7 +11,7 @@ Start with [AGENTS.md](AGENTS.md). Run the scripts as the signed-in user in Wind
 ## Usage
 
 ```powershell
-.\Review-Startup.ps1 | Set-Content baseline.json
+.\Review-Startup.ps1 | Set-Content -Encoding UTF8 baseline.json
 .\Review-Startup.ps1 -Baseline .\baseline.json
 ```
 
